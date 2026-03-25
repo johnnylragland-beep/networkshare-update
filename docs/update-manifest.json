@@ -1,6 +1,5 @@
 {
-  "version": "1.7",
-  "package_url": "https://github.com/johnnylragland-beep/networkshare-update/releases/download/1.7/networkshare-1.7.zip",
-  "sha256": "4239e15aabcad9185455b1a313f9bbc7be5ff905ed044e2bba9cebae224575b0",
-  "post_update_action": "rerun_setup"
+  "version": "1.8",
+  "package_url": "https://github.com/johnnylragland-beep/networkshare-update/releases/download/1.8/networkshare-1.8.zip",
+  "sha256": "ac8a42169eb7b55f8b49cc00c69724ffe989ce1909888d7a392f54d93ea604fa"
 }
