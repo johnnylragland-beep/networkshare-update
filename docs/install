@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Public entry point: curl -fsSL https://.../install | bash
+set -euo pipefail
+
+main() (
+    if ! command -v python3 >/dev/null 2>&1 || ! python3 -c 'import venv, ensurepip' >/dev/null 2>&1; then
+        if ! command -v apt-get >/dev/null 2>&1; then
+            echo 'Install Python 3 with pip and venv support, then run this command again.' >&2
+            exit 1
+        fi
+        echo 'Installing Python prerequisites...'
+        elevate=()
+        if [[ "$EUID" -ne 0 ]]; then
+            elevate=(sudo)
+        fi
+        "${elevate[@]}" apt-get update
+        "${elevate[@]}" apt-get install -y python3 python3-pip python3-venv
+    fi
+
+    installer_file="$(mktemp)"
+    trap 'rm -f -- "$installer_file"' EXIT
+    installer_url='https://johnnylragland-beep.github.io/networkshare-update/install.py'
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$installer_url" -o "$installer_file"
+    elif command -v wget >/dev/null 2>&1; then
+        wget -qO "$installer_file" "$installer_url"
+    else
+        echo 'curl or wget is required.' >&2
+        exit 1
+    fi
+    python3 "$installer_file" "$@"
+)
+
+# The shell script arrives through a pipe; setup must read answers from the terminal.
+if [[ ! -t 0 ]]; then
+    main "$@" </dev/tty
+else
+    main "$@"
+fi
